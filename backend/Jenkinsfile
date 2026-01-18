@@ -1,15 +1,17 @@
 pipeline {
     agent any
     environment {
-        VENV = "/home/ubuntu/Assignment_8/backend/venv"
+        VENV = "/home/ubuntu/Assignment_9/backend/venv"
     }
     stages {
-        stage('Activate Virtualenv') {
+        stage('Activate Virtualenv & Start Flask') {
             steps {
                 dir('backend') {
                     sh """
+                    # Activate virtualenv
                     source $VENV/bin/activate
-                    pip install -r requirements.txt
+                    
+                    # Start or restart Flask using PM2
                     pm2 restart flask-app || pm2 start app.py --name flask-app --interpreter $VENV/bin/python
                     """
                 }
