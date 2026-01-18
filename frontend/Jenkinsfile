@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    environment {
+        BACKEND_URL = "http://localhost:5000"
+    }
+    stages {
+        stage('Install Node Modules') {
+            steps {
+                dir('frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'pm2 restart express-app || pm2 start server.js --name express-app --env BACKEND_URL=$BACKEND_URL'
+                }
+            }
+        }
+    }
+}
+
