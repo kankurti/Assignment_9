@@ -1,23 +1,32 @@
 pipeline {
     agent any
+
     environment {
+        APP_NAME = "express-app"
         BACKEND_URL = "http://localhost:5000"
     }
+
     stages {
-        stage('Install Node Modules') {
+        stage('Checkout Code') {
             steps {
-                dir('frontend') {
-                    sh 'npm install'
-                }
+                checkout scm
             }
         }
-        stage('Build Frontend') {
+
+        stage('Install Dependencies') {
             steps {
-                dir('frontend') {
-                    sh 'pm2 restart express-app || pm2 start server.js --name express-app --env BACKEND_URL=$BACKEND_URL'
-                }
+                sh 'npm install'
+            }
+        }
+
+        stage('Start Express App') {
+            steps {
+                sh '''
+                pm2 delete $APP_NAME || true
+                BACKEND_URL=$BACKEND_URL pm2 start server.js --name $APP_NAME
+                pm2 save
+                '''
             }
         }
     }
 }
-
