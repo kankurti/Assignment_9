@@ -14,17 +14,16 @@ pipeline {
         }
 
         stage('Install Python Dependencies') {
-    steps {
-        dir('backend') {
-            sh '''
-            python3 -m venv --clear $VENV
-            $VENV/bin/pip install --upgrade pip
-            $VENV/bin/pip install -r requirements.txt
-            '''
+            steps {
+                dir('backend') {
+                    sh '''
+                    python3 -m venv --clear $VENV
+                    $VENV/bin/pip install --upgrade pip
+                    $VENV/bin/pip install -r requirements.txt
+                    '''
+                }
+            }
         }
-    }
-}
-
 
         stage('Start Flask Backend') {
             steps {
